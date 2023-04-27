@@ -6,7 +6,7 @@ Maker Media GmbH
 # e-Ink-Display fürs Smarthome
 Display für Sensordaten von Home Assistant mit ESP32 und Rotary-Encoder
 
-### Dieses e-Ink-Display zeigt Ihnen Sensordaten Ihres Smarthomes an ohne permant zu leuchten. Mit dem Drehwähler schalten Sie zwischen mehreren Bildschirmseiten um.
+### Dieses e-Ink-Display zeigt Ihnen Sensordaten Ihres Smarthomes an ohne permanent zu leuchten. Mit dem Drehwähler schalten Sie zwischen mehreren Bildschirmseiten um.
 
 Ein passendes 3D-Druck-Gehäuse finden Sie im Ordner 3D.
 

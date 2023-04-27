@@ -1,0 +1,234 @@
+esphome:
+  name: epaper
+
+esp32:
+  board: az-delivery-devkit-v4
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Hier setzt ESPHome den Schlüssel automatisch ein"
+
+ota:
+  password: "Hier setzt ESPHome das Passwort automatisch ein"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Epaper Fallback Hotspot"
+    password: "xxxxxxxxxxx"
+
+captive_portal:
+
+sensor:
+  - platform: homeassistant
+    id: flurtemp
+    entity_id: sensor.temperature_humidity_sensor_2dd9_temperature
+    internal: true
+  
+  - platform: homeassistant
+    id: badtemp
+    entity_id: sensor.temperature_humidity_sensor_d2e4_temperature
+    internal: true
+
+  - platform: homeassistant
+    id: schlaftemp
+    entity_id: sensor.temperature_humidity_sensor_d349_temperature
+    internal: true
+
+  - platform: homeassistant
+    id: wohntemp
+    entity_id: sensor.temperature_humidity_sensor_ba90_temperature
+    internal: true
+
+  - platform: homeassistant
+    id: kuechetemp
+    entity_id: sensor.temperature_humidity_sensor_0411_temperature
+    internal: true
+
+  - platform: homeassistant
+    id: aussentemp
+    entity_id: sensor.temperature_humidity_sensor_e628_temperature
+    internal: true
+
+  - platform: homeassistant
+    id: flurfeucht
+    entity_id: sensor.temperature_humidity_sensor_2dd9_humidity
+    internal: true
+  
+  - platform: homeassistant
+    id: badfeucht
+    entity_id: sensor.temperature_humidity_sensor_d2e4_humidity
+    internal: true
+
+  - platform: homeassistant
+    id: schlaffeucht
+    entity_id: sensor.temperature_humidity_sensor_d349_humidity
+    internal: true
+
+  - platform: homeassistant
+    id: wohnfeucht
+    entity_id: sensor.temperature_humidity_sensor_ba90_humidity
+    internal: true
+
+  - platform: homeassistant
+    id: kuechefeucht
+    entity_id: sensor.temperature_humidity_sensor_0411_humidity
+    internal: true
+
+  - platform: homeassistant
+    id: aussenfeucht
+    entity_id: sensor.temperature_humidity_sensor_e628_humidity
+    internal: true
+
+  
+  - platform: rotary_encoder
+    name: "Rotary Encoder"
+    pin_a: 17
+    pin_b: 5
+    min_value: 1
+    max_value: 2
+    publish_initial_value: True
+    id: rotary
+
+    on_clockwise:
+      - display.page.show_next: my_display
+      - component.update: my_display
+    on_anticlockwise:
+      - display.page.show_previous: my_display
+      - component.update: my_display
+
+switch:
+  - platform: gpio
+    pin:
+      number: 19
+      inverted: true
+    id: e_voltage
+
+time:
+  - platform: homeassistant
+    id: hass_time
+
+         
+font:
+  - file: 'fonts/Antenna-Bold.ttf'
+    id: font1
+    size: 36
+    
+  - file: 'fonts/Antenna-Bold.ttf'
+    id: font2
+    size: 24
+
+  - file: 'fonts/Antenna-Bold.ttf'
+    id: font3
+    size: 48
+
+spi:
+  clk_pin: 33
+  mosi_pin: 32
+
+display:
+  - platform: waveshare_epaper
+    cs_pin: 25
+    dc_pin: 26
+    busy_pin: 14
+    reset_pin: 27
+    model: 7.50inv2
+    update_interval: 60s
+    reset_duration: 2ms
+    id: my_display
+    pages:
+      - id: page1
+        lambda: |-
+          int breite = 799;
+          int hoehe = 479;
+          it.line(0, 0, breite, 0);
+          it.line(breite, 0, breite, hoehe);
+          it.line(breite, hoehe, 0, hoehe);
+          it.line(0, hoehe, 0, 0);
+
+          it.line(2*(breite/3),hoehe,2*(breite/3),0);
+          it.line(breite/3,hoehe,breite/3,0);
+          it.line(0,hoehe/3,breite,hoehe/3);
+          it.line(0,2*(hoehe/3),breite,2*(hoehe/3));
+
+          it.printf(20,50, id(font1), "Temperatur");
+
+          it.strftime(552, 100, id(font3),TextAlign::BOTTOM_LEFT, "%H:%M", id(hass_time).now());
+
+          it.printf(20,(hoehe/3)+10, id(font2), "Wohnzimmer");
+          it.printf(20,(hoehe/3)+50, id(font3), "%4.1f", id(wohntemp).state);
+          it.printf(165,(hoehe/3)+50, id(font3), "°C");
+
+          it.printf(breite/3+20,(hoehe/3)+10, id(font2), "Schlafzimmer");
+          it.printf(breite/3+20,(hoehe/3)+50, id(font3), "%4.1f", id(schlaftemp).state);
+          it.printf(breite/3+165,(hoehe/3)+50, id(font3), "°C");
+
+          it.printf((breite/3)*2+20,(hoehe/3)+10, id(font2), "Kueche");
+          it.printf((breite/3)*2+20,(hoehe/3)+50, id(font3), "%4.1f", id(kuechetemp).state);
+          it.printf((breite/3)*2+165,(hoehe/3)+50, id(font3), "°C");
+
+          it.printf(20,(hoehe/3)*2+10, id(font2), "Badezimmer");
+          it.printf(20,(hoehe/3)*2+50, id(font3), "%4.1f", id(badtemp).state);
+          it.printf(165,(hoehe/3)*2+50, id(font3), "°C");
+
+          it.printf(breite/3+20,(hoehe/3)*2+10, id(font2), "Flur");
+          it.printf(breite/3+20,(hoehe/3)*2+50, id(font3), "%4.1f", id(flurtemp).state);
+          it.printf(breite/3+165,(hoehe/3)*2+50, id(font3), "°C");
+
+          it.printf(breite/3*2+20,(hoehe/3)*2+10, id(font2), "Balkon");
+          it.printf(breite/3*2+20,(hoehe/3)*2+50, id(font3), "%4.1f", id(aussentemp).state);
+          it.printf(breite/3*2+165,(hoehe/3)*2+50, id(font3), "°C");
+ 
+      - id: page2
+        lambda: |-
+          int breite = 799;
+          int hoehe = 479;
+          it.line(0, 0, breite, 0);
+          it.line(breite, 0, breite, hoehe);
+          it.line(breite, hoehe, 0, hoehe);
+          it.line(0, hoehe, 0, 0);
+
+          it.line(2*(breite/3),hoehe,2*(breite/3),0);
+          it.line(breite/3,hoehe,breite/3,0);
+          it.line(0,hoehe/3,breite,hoehe/3);
+          it.line(0,2*(hoehe/3),breite,2*(hoehe/3));
+
+          it.printf(20,50, id(font1), "Feuchtigkeit");
+
+          it.strftime(552, 100, id(font3),TextAlign::BOTTOM_LEFT, "%H:%M", id(hass_time).now());
+
+          it.printf(20,(hoehe/3)+10, id(font2), "Wohnzimmer");
+          it.printf(20,(hoehe/3)+50, id(font3), "%4.1f", id(wohnfeucht).state);
+          it.printf(165,(hoehe/3)+50, id(font2), "Prozent");
+
+          it.printf(breite/3+20,(hoehe/3)+10, id(font2), "Schlafzimmer");
+          it.printf(breite/3+20,(hoehe/3)+50, id(font3), "%4.1f", id(schlaffeucht).state);
+          it.printf(breite/3+165,(hoehe/3)+50, id(font2), "Prozent");
+
+          it.printf((breite/3)*2+20,(hoehe/3)+10, id(font2), "Kueche");
+          it.printf((breite/3)*2+20,(hoehe/3)+50, id(font3), "%4.1f", id(kuechefeucht).state);
+          it.printf((breite/3)*2+165,(hoehe/3)+50, id(font2), "Prozent");
+
+          it.printf(20,(hoehe/3)*2+10, id(font2), "Badezimmer");
+          it.printf(20,(hoehe/3)*2+50, id(font3), "%4.1f", id(badfeucht).state);
+          it.printf(165,(hoehe/3)*2+50, id(font2), "Prozent");
+
+          it.printf(breite/3+20,(hoehe/3)*2+10, id(font2), "Flur");
+          it.printf(breite/3+20,(hoehe/3)*2+50, id(font3), "%4.1f", id(flurfeucht).state);
+          it.printf(breite/3+165,(hoehe/3)*2+50, id(font2), "Prozent");
+
+          it.printf(breite/3*2+20,(hoehe/3)*2+10, id(font2), "Balkon");
+          it.printf(breite/3*2+20,(hoehe/3)*2+50, id(font3), "%4.1f", id(aussenfeucht).state);
+          it.printf(breite/3*2+165,(hoehe/3)*2+50, id(font2), "Prozent");
+
+
+      

@@ -14,4 +14,4 @@ Ein passendes 3D-Druck-Gehäuse finden Sie im Ordner 3D.
 
 Den vollständigen Artikel mit der Bauanleitung gibt es in der **[Make-Ausgabe 3/23 ab Seite xx](https://www.heise.de/select/make/2023/2/2304606541489724045)** zu lesen.
 
-**[Hier](https://www.thingiverse.com/thing:4828448)** der Link zu passenden Knöpfen für en Rotary-Encoder.
+**[Hier](https://www.thingiverse.com/thing:4828448)** der Link zu passenden Knöpfen für den Rotary-Encoder.

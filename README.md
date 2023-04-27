@@ -12,5 +12,6 @@ Ein passendes 3D-Druck-Gehäuse finden Sie im Ordner 3D.
 
 ![Picture](https://github.com/MakeMagazinDE/e-Ink-Display/blob/main/Aufmacher_quer.JPG) 
 
-Den vollständigen Artikel mit der Bauanleitung gibt es in der **[Make-Ausgabe 3/23 ab Seite xx](https://www.heise.de/select/make/2023/2/2304606541489724045)** zu lesen. 
-Hier die Links zu den Bibliotheken **[ESP32-audioI2S](https://github.com/schreibfaul1/ESP32-audioI2S)** und **[radio](https://github.com/mathertel/Radio)**.
+Den vollständigen Artikel mit der Bauanleitung gibt es in der **[Make-Ausgabe 3/23 ab Seite xx](https://www.heise.de/select/make/2023/2/2304606541489724045)** zu lesen.
+
+**[Hier](https://github.com/schreibfaul1/ESP32-audioI2S)** der Link zu passenden Knöpfen für en Rotary-Encoder.
